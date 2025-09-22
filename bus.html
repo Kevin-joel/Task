@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Bus</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
+  button { padding: 6px 10px; margin-top: 10px; }
+  h1 { text-align: center; }
+</style>
+</head>
+<body>
+<h1>🚌 Simple Bus Reservation</h1>
+<h2>Choose Bus</h2>
+<select id="bus"></select>
+<button onclick="nextStep()">Next</button>
+
+<script>
+const buses = {
+  "Hyderabad": ["GreenLine Express", "CityLink Travels"],
+  "Chennai": ["RedBus", "SkyLine"]
+};
+
+const destination = localStorage.getItem('destination');
+if (!destination) { window.location.href = 'destination.html'; }
+
+const busSelect = document.getElementById('bus');
+buses[destination].forEach(bus => {
+  const opt = document.createElement('option');
+  opt.value = bus;
+  opt.textContent = bus;
+  busSelect.appendChild(opt);
+});
+
+function nextStep() {
+  const selectedBus = busSelect.value;
+  if (!selectedBus) { alert('Select bus'); return; }
+  localStorage.setItem('bus', selectedBus);
+  window.location.href = 'seats.html';
+}
+</script>
+</body>
+</html>

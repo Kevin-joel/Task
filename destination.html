@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Destination</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
+  button { padding: 6px 10px; margin-top: 10px; }
+  h1 { text-align: center; }
+</style>
+</head>
+<body>
+<h1>🚌 Simple Bus Reservation</h1>
+<h2>Choose Destination</h2>
+<select id="destination">
+  <option value="">--Select Destination--</option>
+  <option value="Hyderabad">Hyderabad</option>
+  <option value="Chennai">Chennai</option>
+</select>
+<button onclick="nextStep()">Next</button>
+
+<script>
+function nextStep() {
+  const dest = document.getElementById('destination').value;
+  if (!dest) { alert('Select destination'); return; }
+  localStorage.setItem('destination', dest);
+  window.location.href = 'bus.html';
+}
+</script>
+</body>
+</html>

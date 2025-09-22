@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserve Seat</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
+  .seat { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+          margin: 4px; border-radius: 4px; cursor: pointer; }
+  .available { background: #b6f5c2; }
+  .booked { background: #f5b6b6; cursor: not-allowed; }
+  .selected { background: #fff3b6; }
+  button { padding: 6px 10px; margin-top: 10px; }
+  h1 { text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🚌 Reserve Seat</h1>
+<h2 id="busInfo"></h2>
+<div id="seats"></div>
+<p>
+  <input type="text" id="passengerName" placeholder="Your Name" required>
+  <button onclick="bookSeat()">Reserve</button>
+</p>
+
+<script>
+let selectedSeat = '';
+const bookings = JSON.parse(localStorage.getItem('bookings') || '{}');
+
+const destination = localStorage.getItem('destination');
+const bus = localStorage.getItem('bus');
+if (!destination || !bus) { window.location.href = 'destination.html'; }
+
+document.getElementById('busInfo').textContent = `${bus} → ${destination}`;
+
+function showSeats() {
+  const seatContainer = document.getElementById('seats');
+  seatContainer.innerHTML = '';
+  const key = destination + '-' + bus;
+  const booked = bookings[key] || [];
+  const rows = 3, cols = 4; // 12 seats
+
+  for (let r = 0; r < rows; r++) {
+    const rowDiv = document.createElement('div');
+    for (let c = 1; c <= cols; c++) {
+      const seatNo = String.fromCharCode(65+r)+c;
+      if (r*cols+c-1 >= 12) continue;
+      const seatDiv = document.createElement('div');
+      seatDiv.textContent = seatNo;
+      seatDiv.className = booked.includes(seatNo) ? 'seat booked' : 'seat available';
+      seatDiv.onclick = () => selectSeat(seatDiv, seatNo);
+      rowDiv.appendChild(seatDiv);
+    }
+    seatContainer.appendChild(rowDiv);
+  }
+}
+
+function selectSeat(el, seatNo) {
+  if (el.classList.contains('booked')) return;
+  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSeat = seatNo;
+}
+
+function bookSeat() {
+  const name = document.getElementById('passengerName').value.trim();
+  if (!selectedSeat) { alert('Select a seat'); return; }
+  if (!name) { alert('Enter your name'); return; }
+
+  const key = destination + '-' + bus;
+  bookings[key] = bookings[key] || [];
+  if (bookings[key].includes(selectedSeat)) { alert('Seat already booked'); return; }
+
+  bookings[key].push(selectedSeat);
+  localStorage.setItem('bookings', JSON.stringify(bookings));
+  alert(`Seat ${selectedSeat} booked for ${name}!`);
+  selectedSeat = '';
+  document.getElementById('passengerName').value = '';
+  showSeats();
+}
+
+showSeats();
+</script>
+
+</body>
+</html>
