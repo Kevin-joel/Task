@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{bus}} → {{destination}}</h2>
+<form method="post" action="/book">
+  <input type="hidden" name="destination" value="{{destination}}">
+  <input type="hidden" name="bus" value="{{bus}}">
+  <input type="hidden" id="seat_number" name="seat_number">
+  <div>
+    {% for row in seat_rows %}
+      <div>
+      {% for seat in row %}
+        {% set cls = 'seat available' %}
+        {% if seat in booked %}{% set cls = 'seat booked' %}{% endif %}
+        <div class="{{cls}}" onclick="selectSeat(this,'{{seat}}')">{{seat}}</div>
+      {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <button type="submit">Reserve Seat</button>
+</form>
+{% endblock %}

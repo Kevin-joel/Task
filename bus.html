@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Choose Bus for {{destination}}</h2>
+<form method="post" action="/seats">
+  <input type="hidden" name="destination" value="{{destination}}">
+  <select name="bus" required>
+    {% for bus in buses %}
+      <option value="{{bus}}">{{bus}}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Next</button>
+</form>
+{% endblock %}
