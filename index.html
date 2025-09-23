@@ -3,29 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bus Reservation Home</title>
+<title>Bus Reservation - Home</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; text-align: center; }
-  h1 { margin-bottom: 30px; }
-  button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Poppins', sans-serif; color: #fff;
+    overflow: hidden; text-align: center;
+  }
+  #bgVideo {
+    position: fixed; top: 50%; left: 50%;
+    width: 100%; height: 100%; transform: translate(-50%, -50%);
+    object-fit: cover; z-index: -1; background-color: #000;
+  }
+  h1 { margin-top: 100px; font-size: 3rem; text-shadow: 2px 2px 8px #000; }
+  p { font-size: 1.3rem; margin: 20px 0; text-shadow: 1px 1px 6px #000; }
+  button {
+    padding: 14px 30px; font-size: 20px; border: none; border-radius: 30px;
+    background: #ffcc00; color: #333; font-weight: bold; cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  button:hover { background: #ffc107; transform: scale(1.1); }
 </style>
 </head>
 <body>
+<video autoplay muted loop id="bgVideo">
+  <source src="C:\Users\velev\OneDrive\Desktop\3474308-uhd_3840_2160_30fps.mp4" type="video/mp4">
+</video>
 
-<h1>🚌 Welcome to Simple Bus Reservation</h1>
-
-<p>Start your reservation journey:</p>
-<button onclick="startReservation()">Reserve a Seat</button>
+<h1>🚌 Smart Bus Reservation</h1>
+<p>Book your next ride with style!</p>
+<button onclick="startReservation()">Start Reservation</button>
 
 <script>
 function startReservation() {
-  // Clear any previous selections
-  localStorage.removeItem('destination');
-  localStorage.removeItem('bus');
-  // Go to destination page
+  localStorage.clear();
   window.location.href = 'destination.html';
 }
 </script>
-
 </body>
 </html>
