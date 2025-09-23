@@ -3,30 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Choose Destination</title>
+<title>Bus Reservation - Destination</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
-  button { padding: 6px 10px; margin-top: 10px; }
-  h1 { text-align: center; }
+  body, html { margin: 0; padding: 0; height: 100%; font-family: 'Poppins', sans-serif; color: #fff; text-align: center; overflow: hidden; }
+  #bgVideo { position: fixed; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); object-fit: cover; z-index: -1; }
+  h1 { margin-top: 80px; font-size: 3rem; text-shadow: 2px 2px 8px #000; }
+  p { font-size: 1.2rem; text-shadow: 1px 1px 6px #000; }
+  select, button { padding: 12px 20px; font-size: 18px; border-radius: 10px; border: none; margin: 20px 0; }
+  button { background: #ffcc00; color: #333; font-weight: bold; cursor: pointer; border-radius: 30px; }
+  button:hover { background: #ffc107; transform: scale(1.1); }
 </style>
 </head>
 <body>
-<h1>🚌 Simple Bus Reservation</h1>
-<h2>Choose Destination</h2>
-<select id="destination">
-  <option value="">--Select Destination--</option>
-  <option value="Hyderabad">Hyderabad</option>
-  <option value="Chennai">Chennai</option>
+<video autoplay muted loop id="bgVideo">
+  <source src="C:\Users\velev\OneDrive\Desktop\3474308-uhd_3840_2160_30fps.mp4" type="video/mp4">
+</video>
+
+<h1>Choose Your Destination</h1>
+<p>Select where you want to go:</p>
+
+<select id="destinationSelect">
+  <option value="" disabled selected>Select Destination</option>
+  <option value="Vizag">VIZAG</option>
+  <option value="Chennai">CHENNAI</option>
+  <option value="Bangalore">BANGALORE</option>
+  <option value="Hyderabad">HYDERABAD</option>
 </select>
-<button onclick="nextStep()">Next</button>
+
+<br>
+<button onclick="goToBus()">Next</button>
 
 <script>
-function nextStep() {
-  const dest = document.getElementById('destination').value;
-  if (!dest) { alert('Select destination'); return; }
-  localStorage.setItem('destination', dest);
+function goToBus() {
+  const destination = document.getElementById('destinationSelect').value;
+  if (!destination) { alert('Please select a destination!'); return; }
+  localStorage.setItem('destination', destination);
   window.location.href = 'bus.html';
 }
 </script>
 </body>
 </html>
+ 
