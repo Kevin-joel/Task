@@ -3,86 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reserve Seat</title>
+<title>Bus Reservation - Seats</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
-  .seat { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-          margin: 4px; border-radius: 4px; cursor: pointer; }
-  .available { background: #b6f5c2; }
-  .booked { background: #f5b6b6; cursor: not-allowed; }
-  .selected { background: #fff3b6; }
-  button { padding: 6px 10px; margin-top: 10px; }
-  h1 { text-align: center; }
+  body, html { margin: 0; padding: 0; height: 100%; font-family: 'Poppins', sans-serif; color: #fff; text-align: center; overflow: hidden; }
+  #bgVideo { position: fixed; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); object-fit: cover; z-index: -1; }
+  h1 { margin-top: 60px; font-size: 3rem; text-shadow: 2px 2px 8px #000; }
+  p { font-size: 1.2rem; text-shadow: 1px 1px 6px #000; }
+  .seat-container { display: flex; flex-wrap: wrap; justify-content: center; max-width: 500px; margin: 30px auto; }
+  .seat { width: 50px; height: 50px; margin: 8px; border-radius: 8px; background: #ffcc00; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #333; font-weight: bold; transition: transform 0.3s ease; }
+  .seat:hover { transform: scale(1.1); }
+  .seat.selected { background: #28a745; color: #fff; }
+  button { padding: 14px 30px; font-size: 20px; border: none; border-radius: 30px; background: #ffcc00; color: #333; font-weight: bold; cursor: pointer; margin-top: 20px; }
+  button:hover { background: #ffc107; transform: scale(1.1); }
 </style>
 </head>
 <body>
+<video autoplay muted loop id="bgVideo">
+  <source src="C:\Users\velev\OneDrive\Desktop\3474308-uhd_3840_2160_30fps.mp4" type="video/mp4">
+</video>
 
-<h1>🚌 Reserve Seat</h1>
-<h2 id="busInfo"></h2>
-<div id="seats"></div>
-<p>
-  <input type="text" id="passengerName" placeholder="Your Name" required>
-  <button onclick="bookSeat()">Reserve</button>
-</p>
+<h1>Select Your Seats</h1>
+<p>Click on seats to choose your preferred ones:</p>
+
+<div class="seat-container" id="seatContainer"></div>
+<button onclick="confirmSeats()">Confirm Seats</button>
 
 <script>
-let selectedSeat = '';
-const bookings = JSON.parse(localStorage.getItem('bookings') || '{}');
+const seatContainer = document.getElementById('seatContainer');
+const rows = 5, cols = 4;
+let selectedSeats = [];
 
-const destination = localStorage.getItem('destination');
-const bus = localStorage.getItem('bus');
-if (!destination || !bus) { window.location.href = 'destination.html'; }
-
-document.getElementById('busInfo').textContent = `${bus} → ${destination}`;
-
-function showSeats() {
-  const seatContainer = document.getElementById('seats');
-  seatContainer.innerHTML = '';
-  const key = destination + '-' + bus;
-  const booked = bookings[key] || [];
-  const rows = 3, cols = 4; // 12 seats
-
-  for (let r = 0; r < rows; r++) {
-    const rowDiv = document.createElement('div');
-    for (let c = 1; c <= cols; c++) {
-      const seatNo = String.fromCharCode(65+r)+c;
-      if (r*cols+c-1 >= 12) continue;
-      const seatDiv = document.createElement('div');
-      seatDiv.textContent = seatNo;
-      seatDiv.className = booked.includes(seatNo) ? 'seat booked' : 'seat available';
-      seatDiv.onclick = () => selectSeat(seatDiv, seatNo);
-      rowDiv.appendChild(seatDiv);
-    }
-    seatContainer.appendChild(rowDiv);
+for (let i = 1; i <= rows; i++) {
+  for (let j = 1; j <= cols; j++) {
+    const seat = document.createElement('div');
+    seat.classList.add('seat');
+    seat.textContent = `R${i}S${j}`;
+    seat.addEventListener('click', () => {
+      seat.classList.toggle('selected');
+      const seatId = seat.textContent;
+      if (selectedSeats.includes(seatId)) {
+        selectedSeats = selectedSeats.filter(s => s !== seatId);
+      } else {
+        selectedSeats.push(seatId);
+      }
+    });
+    seatContainer.appendChild(seat);
   }
 }
 
-function selectSeat(el, seatNo) {
-  if (el.classList.contains('booked')) return;
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSeat = seatNo;
+function confirmSeats() {
+  if (selectedSeats.length === 0) { alert("Please select at least one seat!"); return; }
+  localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+  alert("Seats confirmed: " + selectedSeats.join(', '));
+  // Example: window.location.href = 'payment.html';
 }
-
-function bookSeat() {
-  const name = document.getElementById('passengerName').value.trim();
-  if (!selectedSeat) { alert('Select a seat'); return; }
-  if (!name) { alert('Enter your name'); return; }
-
-  const key = destination + '-' + bus;
-  bookings[key] = bookings[key] || [];
-  if (bookings[key].includes(selectedSeat)) { alert('Seat already booked'); return; }
-
-  bookings[key].push(selectedSeat);
-  localStorage.setItem('bookings', JSON.stringify(bookings));
-  alert(`Seat ${selectedSeat} booked for ${name}!`);
-  selectedSeat = '';
-  document.getElementById('passengerName').value = '';
-  showSeats();
-}
-
-showSeats();
 </script>
-
 </body>
 </html>
