@@ -3,42 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Choose Bus</title>
+<title>Bus Reservation - Bus Selection</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
-  button { padding: 6px 10px; margin-top: 10px; }
-  h1 { text-align: center; }
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+  }
+
+  /* Full video background */
+  #bgVideo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: contain; /* full video visible */
+    z-index: -1;
+    background-color: #000;
+  }
+
+  h1 {
+    margin-top: 80px;
+    font-size: 3rem;
+    animation: fadeInDown 1s ease;
+    text-shadow: 2px 2px 8px #000;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    animation: fadeIn 2s ease;
+    text-shadow: 1px 1px 6px #000;
+  }
+
+  .bus-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 600px;
+    margin: 30px auto;
+    z-index: 2;
+    position: relative;
+  }
+
+  .bus-option {
+    width: 200px;
+    height: 120px;
+    margin: 15px;
+    border-radius: 12px;
+    background: #ffcc00;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-weight: bold;
+    transition: transform 0.3s ease, background 0.3s ease;
+    text-align: center;
+  }
+
+  .bus-option.selected {
+    background: #28a745;
+    color: #fff;
+  }
+
+  .bus-option:hover {
+    transform: scale(1.05);
+  }
+
+  button {
+    padding: 14px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 30px;
+    background: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    z-index: 2;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background: #ffc107;
+    transform: scale(1.1);
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 </style>
 </head>
 <body>
-<h1>🚌 Simple Bus Reservation</h1>
-<h2>Choose Bus</h2>
-<select id="bus"></select>
-<button onclick="nextStep()">Next</button>
+
+<!-- Video background -->
+<video autoplay muted loop id="bgVideo">
+  <source src="C:\Users\velev\OneDrive\Desktop\3474308-uhd_3840_2160_30fps.mp4" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
+<h1>Select Your Bus</h1>
+<p>Choose the bus that fits your schedule:</p>
+
+<div class="bus-container" id="busContainer">
+  <!-- Bus options will be generated here -->
+</div>
+
+<button onclick="confirmBus()">Next</button>
 
 <script>
-const buses = {
-  "Hyderabad": ["GreenLine Express", "CityLink Travels"],
-  "Chennai": ["RedBus", "SkyLine"]
-};
+const busContainer = document.getElementById('busContainer');
+const buses = ['INTRCITY - 9:00 AM', 'NEUGO- 12:00 PM', 'AIRAVAT - 3:00 PM', 'GARUDA - 6:00 PM'];
+let selectedBus = null;
 
-const destination = localStorage.getItem('destination');
-if (!destination) { window.location.href = 'destination.html'; }
-
-const busSelect = document.getElementById('bus');
-buses[destination].forEach(bus => {
-  const opt = document.createElement('option');
-  opt.value = bus;
-  opt.textContent = bus;
-  busSelect.appendChild(opt);
+// Generate bus options dynamically
+buses.forEach(busName => {
+  const busDiv = document.createElement('div');
+  busDiv.classList.add('bus-option');
+  busDiv.textContent = busName;
+  busDiv.addEventListener('click', () => {
+    // Deselect previously selected
+    document.querySelectorAll('.bus-option').forEach(b => b.classList.remove('selected'));
+    busDiv.classList.add('selected');
+    selectedBus = busName;
+  });
+  busContainer.appendChild(busDiv);
 });
 
-function nextStep() {
-  const selectedBus = busSelect.value;
-  if (!selectedBus) { alert('Select bus'); return; }
-  localStorage.setItem('bus', selectedBus);
+function confirmBus() {
+  if(!selectedBus) {
+    alert('Please select a bus!');
+    return;
+  }
+  localStorage.setItem('selectedBus', selectedBus);
+  // Navigate to seats selection
   window.location.href = 'seats.html';
 }
 </script>
+
 </body>
 </html>
